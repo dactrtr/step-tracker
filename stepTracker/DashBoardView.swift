@@ -88,6 +88,7 @@ struct DashBoardView: View {
       }
       .padding()
       .task{
+        
         isShowingPermissionPriming = !hasSeenPermissionPriming
         
       }
