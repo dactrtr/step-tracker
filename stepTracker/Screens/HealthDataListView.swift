@@ -69,6 +69,6 @@ struct HealthDataListView: View {
 
 #Preview {
   NavigationStack{
-    HealthDataListView(metric: .weight)
+    HealthDataListView(metric: .steps)
   }
 }
