@@ -8,6 +8,12 @@
 import Foundation
 import HealthKit
 import Observation
+enum STError : Error{
+  case authNotDetermined
+  case sharingDenied(quantityType: String)
+  case noData
+  case unableToCompleteRequest
+}
 
 @Observable class HealthKitManager{
   
@@ -19,7 +25,11 @@ import Observation
   var weightData : [HealthMetric] = []
   var weightDiffData : [HealthMetric] = []
   
-  func fetchStepCount() async{
+  func fetchStepCount() async throws{
+    guard store.authorizationStatus(for: HKQuantityType(.stepCount)) != .notDetermined else {
+      throw STError.authNotDetermined
+    }
+    
     let calendar = Calendar.current
     let today = calendar.startOfDay(for: .now)
     let endDate = calendar.date(byAdding: .day, value: 1, to: today)!
@@ -39,14 +49,19 @@ import Observation
       stepData = stepCounts.statistics().map {
         .init(date: $0.startDate, value: $0.sumQuantity()?.doubleValue(for: .count()) ?? 0)
       }
-    } catch{
-      // error handling
+    } catch HKError.errorNoData{
+      throw STError.noData
+    } catch {
+      throw STError.unableToCompleteRequest
     }
-   
+    
     
   }
   
-  func fetchWeightCount() async{
+  func fetchWeightCount() async throws{
+    guard store.authorizationStatus(for: HKQuantityType(.bodyMass)) != .notDetermined else {
+      throw STError.authNotDetermined
+    }
     let calendar = Calendar.current
     let today = calendar.startOfDay(for: .now)
     let endDate = calendar.date(byAdding: .day, value: 1, to: today)!
@@ -65,14 +80,19 @@ import Observation
       weightData = weights.statistics().map {
         .init(date: $0.startDate, value: $0.mostRecentQuantity()?.doubleValue(for: .pound()) ?? 0)
       }
-    }catch{
-      // error handling
+    } catch HKError.errorNoData{
+      throw STError.noData
+    } catch {
+      throw STError.unableToCompleteRequest
     }
-   
+    
     
   }
   
-  func fetchWeightForDifferentials() async{
+  func fetchWeightForDifferentials() async throws{
+    guard store.authorizationStatus(for: HKQuantityType(.bodyMass)) != .notDetermined else {
+      throw STError.authNotDetermined
+    }
     let calendar = Calendar.current
     let today = calendar.startOfDay(for: .now)
     let endDate = calendar.date(byAdding: .day, value: 1, to: today)!
@@ -91,42 +111,79 @@ import Observation
       weightDiffData = weights.statistics().map {
         .init(date: $0.startDate, value: $0.mostRecentQuantity()?.doubleValue(for: .pound()) ?? 0)
       }
-    }catch{
-      // error handling
+    } catch HKError.errorNoData{
+      throw STError.noData
+    } catch {
+      throw STError.unableToCompleteRequest
     }
-   
+    
     
   }
   
-  func addStepData(for date: Date, value: Double) async{
+  func addStepData(for date: Date, value: Double) async throws{
+    let status = store.authorizationStatus(for: HKQuantityType(.stepCount))
+    switch status {
+    case .notDetermined:
+      throw STError.authNotDetermined
+    case .sharingDenied:
+      throw STError.sharingDenied(quantityType: "step count")
+    case .sharingAuthorized:
+      break
+    @unknown default:
+      break
+    }
+    
     let stepQuantity = HKQuantity(unit: .count(), doubleValue: value)
     let stepSample = HKQuantitySample(type: HKQuantityType(.stepCount), quantity: stepQuantity, start: date, end: date)
-    try! await store.save(stepSample)
+    do {
+      try await store.save(stepSample)
+    } catch {
+      throw STError.authNotDetermined
+    }
+    
   }
-  func addWeightData(for date: Date, value: Double) async{
+  func addWeightData(for date: Date, value: Double) async throws{
+    
+    let status = store.authorizationStatus(for: HKQuantityType(.bodyMass))
+    switch status {
+    case .notDetermined:
+      throw STError.authNotDetermined
+    case .sharingDenied:
+      throw STError.sharingDenied(quantityType: "weight")
+    case .sharingAuthorized:
+      break
+    @unknown default:
+      break
+    }
+    
     let weightQuantity = HKQuantity(unit: .pound(), doubleValue: value)
     let weightSample = HKQuantitySample(type: HKQuantityType(.bodyMass), quantity: weightQuantity, start: date, end: date)
-    try! await store.save(weightSample)
+    do {
+      try await store.save(weightSample)
+    } catch {
+      throw STError.unableToCompleteRequest
+    }
+   
   }
   
-//    func addSimulatorData() async {
-//      var mockSamples: [HKQuantitySample] = []
-//  
-//      for i in 0..<28 {
-//        let stepQuantity = HKQuantity(unit: .count(), doubleValue: .random(in: 4_000...20_000))
-//        let weightQuantity = HKQuantity(unit: .pound(), doubleValue: .random(in: (160 + Double(i/3)...165 + Double(i/3))))
-//  
-//        let startDate = Calendar.current.date(byAdding: .day, value: -i, to: .now)!
-//        let endDate = Calendar.current.date(byAdding: .second, value: 1, to: startDate)!
-//  
-//        let stepSample = HKQuantitySample(type: HKQuantityType(.stepCount), quantity: stepQuantity, start: startDate, end: endDate)
-//        let weightSample = HKQuantitySample(type: HKQuantityType(.bodyMass), quantity: weightQuantity, start: startDate, end: endDate)
-//  
-//        mockSamples.append(stepSample)
-//        mockSamples.append(weightSample)
-//      }
-//  
-//      try! await store.save(mockSamples)
-//      print("✅ Dummy Data sent up")
-//    }
+  //    func addSimulatorData() async {
+  //      var mockSamples: [HKQuantitySample] = []
+  //
+  //      for i in 0..<28 {
+  //        let stepQuantity = HKQuantity(unit: .count(), doubleValue: .random(in: 4_000...20_000))
+  //        let weightQuantity = HKQuantity(unit: .pound(), doubleValue: .random(in: (160 + Double(i/3)...165 + Double(i/3))))
+  //
+  //        let startDate = Calendar.current.date(byAdding: .day, value: -i, to: .now)!
+  //        let endDate = Calendar.current.date(byAdding: .second, value: 1, to: startDate)!
+  //
+  //        let stepSample = HKQuantitySample(type: HKQuantityType(.stepCount), quantity: stepQuantity, start: startDate, end: endDate)
+  //        let weightSample = HKQuantitySample(type: HKQuantityType(.bodyMass), quantity: weightQuantity, start: startDate, end: endDate)
+  //
+  //        mockSamples.append(stepSample)
+  //        mockSamples.append(weightSample)
+  //      }
+  //
+  //      try! await store.save(mockSamples)
+  //      print("✅ Dummy Data sent up")
+  //    }
 }
