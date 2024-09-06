@@ -77,6 +77,7 @@ struct WeightDiffBarChart: View {
         AxisMarks{ value in
           AxisGridLine()
             .foregroundStyle(Color.secondary.opacity(0.3))
+          
           AxisValueLabel()
         }
       }
