@@ -16,6 +16,7 @@ struct HealthDataListView: View {
   @State private var addDataDate : Date = .now
   @State private var valueToAdd : String = ""
   
+//  @Binding var isShowingPermissionPriming : Bool
   var metric: HealthMetricContext
   
   var listData: [HealthMetric] {
@@ -61,15 +62,33 @@ struct HealthDataListView: View {
         ToolbarItem(placement: .topBarTrailing) {
           Button("Add Data"){
             Task{
-              if metric == .steps {
-                await hkManager.addStepData(for: addDataDate, value: Double(valueToAdd)!)
-                await hkManager.fetchStepCount()
-                isShowingAddData = false
+              if metric == .steps { // all this trys werent in the tutorial
+                do {
+                  try await hkManager.addStepData(for: addDataDate, value: Double(valueToAdd)!)
+                  try await hkManager.fetchStepCount()
+                  isShowingAddData = false
+//                } catch STError.authNotDetermined {
+//                  isShowingPermissionPriming = true
+                } catch STError.sharingDenied(let quantityType){
+                  print("❌ sharing denied for \(quantityType)")
+                } catch {
+                  print("❌ datalist unable to complete request")
+                }
+                
               }else{
-                await hkManager.addWeightData(for: addDataDate, value: Double(valueToAdd)!)
-                await hkManager.fetchWeightCount()
-                await hkManager.fetchWeightForDifferentials()
-                isShowingAddData = false
+                do{
+                  try await hkManager.addWeightData(for: addDataDate, value: Double(valueToAdd)!)
+                  try await hkManager.fetchWeightCount()
+                  try await hkManager.fetchWeightForDifferentials()
+                  isShowingAddData = false
+//                } catch STError.authNotDetermined {
+//                  isShowingPermissionPriming = true
+                } catch STError.sharingDenied(let quantityType){
+                  print("❌ sharing denied for \(quantityType)")
+                } catch {
+                  print("❌ datalist unable to complete request")
+                }
+                
               }
             }
           }
