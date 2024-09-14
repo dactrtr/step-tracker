@@ -12,7 +12,8 @@ struct HealthDataListView: View {
   @Environment(HealthKitManager.self) private var hkManager
   
   @State private var isShowingAddData = false
-  
+  @State private var isShowingAlert = false
+  @State private var writeError: STError = .noData
   @State private var addDataDate : Date = .now
   @State private var valueToAdd : String = ""
   
@@ -56,13 +57,26 @@ struct HealthDataListView: View {
         }
       }
       .navigationTitle(metric.title)
+      .alert(isPresented: $isShowingAlert, error: writeError, actions: { writeError in
+        switch writeError {
+        case .authNotDetermined, .noData, .unableToCompleteRequest:
+          EmptyView()
+        case .sharingDenied(let quantityType):
+          Button("Settings") {
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+          }
+          Button("Cancel", role: .cancel) { }
+        }
+      }, message: { writeError in
+        Text(writeError.failureReason)
+      })
       .toolbarTitleDisplayMode(.inline)
       .toolbar{
         
         ToolbarItem(placement: .topBarTrailing) {
           Button("Add Data"){
             Task{
-              if metric == .steps { // all this trys werent in the tutorial
+              if metric == .steps {
                 do {
                   try await hkManager.addStepData(for: addDataDate, value: Double(valueToAdd)!)
                   try await hkManager.fetchStepCount()
@@ -70,9 +84,11 @@ struct HealthDataListView: View {
 //                } catch STError.authNotDetermined {
 //                  isShowingPermissionPriming = true
                 } catch STError.sharingDenied(let quantityType){
-                  print("❌ sharing denied for \(quantityType)")
+                    writeError = .sharingDenied(quantityType: quantityType)
+                    isShowingAlert = true
                 } catch {
-                  print("❌ datalist unable to complete request")
+                    writeError = .unableToCompleteRequest
+                    isShowingAlert = true
                 }
                 
               }else{
@@ -84,9 +100,11 @@ struct HealthDataListView: View {
 //                } catch STError.authNotDetermined {
 //                  isShowingPermissionPriming = true
                 } catch STError.sharingDenied(let quantityType){
-                  print("❌ sharing denied for \(quantityType)")
+                    writeError = .sharingDenied(quantityType: quantityType)
+                    isShowingAlert = true
                 } catch {
-                  print("❌ datalist unable to complete request")
+                    writeError = .unableToCompleteRequest
+                    isShowingAlert = true
                 }
                 
               }
