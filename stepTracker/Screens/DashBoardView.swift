@@ -24,10 +24,9 @@ enum HealthMetricContext : CaseIterable, Identifiable{
 struct DashBoardView: View {
   
   @Environment(HealthKitManager.self) private var hkManager
-  
-  @AppStorage("hasSeenPermissionPriming") private var hasSeenPermissionPriming = false
   @State private var isShowingPermissionPrimingSheet = false
-  
+  @State private var isShowingAlert = false
+  @State private var fetchError: STError = .noData
   @State private var selectedStat: HealthMetricContext = .steps
   
   var isSteps : Bool {selectedStat == .steps}
@@ -50,6 +49,7 @@ struct DashBoardView: View {
             StepPieChart(chartData: ChartMath.averageWeekdayCount(for: hkManager.stepData))
           case .weight:
             WeightLineChart(selectedStat: selectedStat, chartData: hkManager.weightData)
+            WeightDiffBarChart(chartData: ChartMath.averageDailyWeightDiffs(for: hkManager.weightDiffData))
           }
           
           
@@ -59,11 +59,21 @@ struct DashBoardView: View {
       }
       .padding()
       .task{
-//        await hkManager.addSimulatorData()
-        await hkManager.fetchStepCount()
-        await hkManager.fetchWeightCount()
-        ChartMath.averageWeekdayCount(for: hkManager.stepData)
-        isShowingPermissionPrimingSheet = !hasSeenPermissionPriming
+        //        await hkManager.addSimulatorData()
+        do {
+          try await hkManager.fetchStepCount()
+          try await hkManager.fetchWeightCount()
+          try await hkManager.fetchWeightForDifferentials()
+          ChartMath.averageWeekdayCount(for: hkManager.stepData)
+        } catch STError.authNotDetermined {
+          isShowingPermissionPrimingSheet = true
+        } catch STError.noData {
+          fetchError = .noData
+          isShowingAlert = true
+        } catch {
+          fetchError = .unableToCompleteRequest
+          isShowingAlert = true
+        }
       }
       .navigationTitle("Dashboard")
       .navigationDestination(for: HealthMetricContext.self) { metric in
@@ -72,8 +82,14 @@ struct DashBoardView: View {
       .sheet(isPresented: $isShowingPermissionPrimingSheet, onDismiss: {
         // fetch health data
       }, content: {
-        HealthKitPermissionPrimingView(hasSeen: $hasSeenPermissionPriming)
+        HealthKitPermissionPrimingView()
       })
+      .alert(isPresented: $isShowingAlert, error: fetchError) { fetchError in
+        // Action button
+      } message: { fetchError in
+        Text(fetchError.failureReason)
+      }
+
     }
     .tint(isSteps ? .pink : .indigo)
   }

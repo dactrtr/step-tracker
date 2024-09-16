@@ -11,7 +11,7 @@ import Charts
 struct StepBarChart: View {
   
   @State private var rawSelectedDate : Date?
-  
+  @State private var selectedDay : Date?
   var selectedStat: HealthMetricContext
   var chartData : [HealthMetric]
   
@@ -28,26 +28,33 @@ struct StepBarChart: View {
     }
   }
   
-    var body: some View {
-      VStack {
-        NavigationLink(value: selectedStat){
-          HStack{
-            VStack(alignment:.leading){
-              Label("Stepts", systemImage: "figure.walk")
-                .font(.title3.bold())
-                .foregroundColor(.pink)
-              Text("Avg: \(Int((avgStepCount))) steps")
-                .font(.caption)
-              
-            }
+  var body: some View {
+    VStack {
+      NavigationLink(value: selectedStat){
+        HStack{
+          VStack(alignment:.leading){
+            Label("Stepts", systemImage: "figure.walk")
+              .font(.title3.bold())
+              .foregroundColor(.pink)
+            Text("Avg: \(Int((avgStepCount))) steps")
+              .font(.caption)
             
-            Spacer()
-            
-            Image(systemName: "chevron.right")
           }
+          
+          Spacer()
+          
+          Image(systemName: "chevron.right")
         }
-        .foregroundStyle(.secondary)
-        .padding(.bottom)
+      }
+      .foregroundStyle(.secondary)
+      .padding(.bottom)
+      
+      if chartData.isEmpty {
+        
+        ChartEmptyView(systemImageName: "chart.bar", title: "No Data", description: "There is no step count data from the Health App")
+        
+      } else {
+        
         Chart{
           if let selectedHealthMetric{
             RuleMark(x: .value("Selected Metric", selectedHealthMetric.date, unit: .day))
@@ -87,10 +94,17 @@ struct StepBarChart: View {
           }
         }
       }
-      .padding()
-      .background(
-        RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
     }
+    .padding()
+    .background(
+      RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
+    .sensoryFeedback(.selection, trigger: rawSelectedDate)
+    .onChange(of: rawSelectedDate) { oldValue, newValue in
+      if oldValue?.weekdayInt != newValue?.weekdayInt {
+        selectedDay = newValue
+      }
+    }
+  }
   
   var annotationView: some View {
     VStack(alignment: .leading){
