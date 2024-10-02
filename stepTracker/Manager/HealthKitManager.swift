@@ -67,7 +67,7 @@ import Observation
     do{
       let weights = try await weightQuery.result(for: store)
       return weights.statistics().map {
-        .init(date: $0.startDate, value: $0.mostRecentQuantity()?.doubleValue(for: .gram()) ?? 0)
+        .init(date: $0.startDate, value: $0.mostRecentQuantity()?.doubleValue(for: .gramUnit(with: .kilo)) ?? 0) // localize unit
       }
     } catch HKError.errorNoData{
       throw STError.noData

@@ -47,7 +47,7 @@ struct WeightLineChart: View {
 
           }
           
-          RuleMark(y: .value("Goal", 155))
+          RuleMark(y: .value("Goal", 70)) // goal hardcoded
             .lineStyle(.init(lineWidth: 1, dash: [5]))
             .foregroundStyle(.mint)
           
