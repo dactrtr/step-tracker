@@ -29,8 +29,6 @@ struct DashBoardView: View {
   @State private var fetchError: STError = .noData
   @State private var selectedStat: HealthMetricContext = .steps
   
-  var isSteps : Bool {selectedStat == .steps}
-  
   var body: some View {
     NavigationStack{
       ScrollView{
@@ -58,29 +56,14 @@ struct DashBoardView: View {
         }
       }
       .padding()
-      .task{
-        //        await hkManager.addSimulatorData()
-        do {
-          try await hkManager.fetchStepCount()
-          try await hkManager.fetchWeightCount()
-          try await hkManager.fetchWeightForDifferentials()
-          ChartMath.averageWeekdayCount(for: hkManager.stepData)
-        } catch STError.authNotDetermined {
-          isShowingPermissionPrimingSheet = true
-        } catch STError.noData {
-          fetchError = .noData
-          isShowingAlert = true
-        } catch {
-          fetchError = .unableToCompleteRequest
-          isShowingAlert = true
-        }
-      }
+      .task{ fetchHealthData() }
+      
       .navigationTitle("Dashboard")
       .navigationDestination(for: HealthMetricContext.self) { metric in
         HealthDataListView(metric: metric)
       }
       .sheet(isPresented: $isShowingPermissionPrimingSheet, onDismiss: {
-        // fetch health data
+        fetchHealthData()
       }, content: {
         HealthKitPermissionPrimingView()
       })
@@ -89,12 +72,33 @@ struct DashBoardView: View {
       } message: { fetchError in
         Text(fetchError.failureReason)
       }
-
+      
     }
-    .tint(isSteps ? .pink : .indigo)
+    .tint(selectedStat == .steps ? .pink : .indigo)
   }
   
-  
+  private func fetchHealthData() {
+    Task{
+      do {
+        async let steps = hkManager.fetchStepCount()
+        async let weightsForLineChart = hkManager.fetchWeights(daysBack: 28)
+        async let weightsForDiffBarChart = hkManager.fetchWeights(daysBack: 29)
+        
+        hkManager.stepData = try await steps
+        hkManager.weightData = try await weightsForLineChart
+        hkManager.weightDiffData = try await weightsForDiffBarChart
+        //ChartMath.averageWeekdayCount(for: hkManager.stepData)
+      } catch STError.authNotDetermined {
+        isShowingPermissionPrimingSheet = true
+      } catch STError.noData {
+        fetchError = .noData
+        isShowingAlert = true
+      } catch {
+        fetchError = .unableToCompleteRequest
+        isShowingAlert = true
+      }
+    }
+  }
 }
 
 #Preview {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13269D8B2CAD289E00A29D70 /* STError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13269D8A2CAD289D00A29D70 /* STError.swift */; };
 		133262C12C6457F900CB90E1 /* HealthKitPermissionPrimingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133262C02C6457F900CB90E1 /* HealthKitPermissionPrimingView.swift */; };
 		133262C42C64684300CB90E1 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133262C32C64684300CB90E1 /* HealthKitManager.swift */; };
 		134B69C42C8856E500E23EAA /* WeightLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B69C32C8856E500E23EAA /* WeightLineChart.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		13269D8A2CAD289D00A29D70 /* STError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STError.swift; sourceTree = "<group>"; };
 		133262C02C6457F900CB90E1 /* HealthKitPermissionPrimingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitPermissionPrimingView.swift; sourceTree = "<group>"; };
 		133262C22C645CAC00CB90E1 /* stepTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = stepTracker.entitlements; sourceTree = "<group>"; };
 		133262C32C64684300CB90E1 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 		134B69C52C88583D00E23EAA /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				13269D8A2CAD289D00A29D70 /* STError.swift */,
 				139BF7BE2C828E4300B4DBF3 /* Extension */,
 				134B69C62C88589F00E23EAA /* MockData.swift */,
 			);
@@ -252,6 +255,7 @@
 				134B69C72C88589F00E23EAA /* MockData.swift in Sources */,
 				13C341742C97D5C8009D0772 /* ChartEmptyView.swift in Sources */,
 				136E67F22C61D2DE00A15970 /* stepTrackerApp.swift in Sources */,
+				13269D8B2CAD289E00A29D70 /* STError.swift in Sources */,
 				133262C42C64684300CB90E1 /* HealthKitManager.swift in Sources */,
 				133262C12C6457F900CB90E1 /* HealthKitPermissionPrimingView.swift in Sources */,
 				13E8ED442CA24A6900E04AC6 /* ChartHelper.swift in Sources */,
