@@ -17,6 +17,7 @@
 		136E67F42C61D2DE00A15970 /* DashBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136E67F32C61D2DE00A15970 /* DashBoardView.swift */; };
 		136E67F62C61D2E000A15970 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 136E67F52C61D2E000A15970 /* Assets.xcassets */; };
 		136E67F92C61D2E000A15970 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 136E67F82C61D2E000A15970 /* Preview Assets.xcassets */; };
+		137F81142CAE7DF900DEF661 /* Array+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137F81132CAE7DF900DEF661 /* Array+Ext.swift */; };
 		139BF7BB2C828D0600B4DBF3 /* ChartMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139BF7BA2C828D0600B4DBF3 /* ChartMath.swift */; };
 		139BF7BD2C828DA000B4DBF3 /* ChartDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139BF7BC2C828DA000B4DBF3 /* ChartDataTypes.swift */; };
 		139BF7C02C828E5600B4DBF3 /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139BF7BF2C828E5600B4DBF3 /* Date+Ext.swift */; };
@@ -44,6 +45,7 @@
 		136E67F32C61D2DE00A15970 /* DashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardView.swift; sourceTree = "<group>"; };
 		136E67F52C61D2E000A15970 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		136E67F82C61D2E000A15970 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		137F81132CAE7DF900DEF661 /* Array+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ext.swift"; sourceTree = "<group>"; };
 		139BF7BA2C828D0600B4DBF3 /* ChartMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartMath.swift; sourceTree = "<group>"; };
 		139BF7BC2C828DA000B4DBF3 /* ChartDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataTypes.swift; sourceTree = "<group>"; };
 		139BF7BF2C828E5600B4DBF3 /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				139BF7BF2C828E5600B4DBF3 /* Date+Ext.swift */,
+				137F81132CAE7DF900DEF661 /* Array+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 				13D1ED3A2C6D8AED0082B269 /* HealthMetric.swift in Sources */,
 				139BF7BD2C828DA000B4DBF3 /* ChartDataTypes.swift in Sources */,
 				139BF7C52C82B4AD00B4DBF3 /* StepPieChart.swift in Sources */,
+				137F81142CAE7DF900DEF661 /* Array+Ext.swift in Sources */,
 				134B69C42C8856E500E23EAA /* WeightLineChart.swift in Sources */,
 				139BF7C02C828E5600B4DBF3 /* Date+Ext.swift in Sources */,
 			);

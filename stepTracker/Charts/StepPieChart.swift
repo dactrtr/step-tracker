@@ -12,14 +12,14 @@ struct StepPieChart: View {
   
   @State private var rawSelectedChartValue: Double? = 0
   @State private var selectedDay : Date?
+  @State private var lastSelectedValue : Double = 0
   
   var selectedWeekday: DateValueChartData? {
-    guard let  rawSelectedChartValue else { return nil }
     var total = 0.0
     return chartData.first {
       total += $0.value
       
-      return rawSelectedChartValue <= total
+      return lastSelectedValue <= total
     }
   }
   
@@ -32,10 +32,6 @@ struct StepPieChart: View {
                                             context: .steps,
                                             isNav: false)
     ChartContainer(config: config) {
-      
-      if chartData.isEmpty {
-        ChartEmptyView(systemImageName: "chart.pie", title: "No Data", description: "There is no step count data from the Health App")
-      } else {
         Chart{
           ForEach(chartData){ weekday in
             SectorMark(angle: .value("Average Steps", weekday.value),
@@ -49,7 +45,16 @@ struct StepPieChart: View {
             
           }
         }
-        .chartAngleSelection(value: $rawSelectedChartValue.animation(.easeInOut))
+        .chartAngleSelection(value: $rawSelectedChartValue)
+        .onChange(of: rawSelectedChartValue) { oldValue, newValue in
+          withAnimation(.easeInOut){
+            guard let newValue else {
+              lastSelectedValue = oldValue ?? 0
+              return
+            }
+            lastSelectedValue = newValue
+          }
+        }
         .frame(height: 240)
         .chartBackground{ proxy in
           GeometryReader { geo in
@@ -73,7 +78,12 @@ struct StepPieChart: View {
             }
           }
         }
-      }
+      
+        .overlay {
+          if chartData.isEmpty{
+            ChartEmptyView(systemImageName: "chart.pie", title: "No Data", description: "There is no step count data from the Health App")
+          }
+        }
     }
     .sensoryFeedback(.selection, trigger: selectedDay)
     .onChange(of: selectedWeekday) { oldValue, newValue in

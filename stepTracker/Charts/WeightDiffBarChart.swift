@@ -27,9 +27,6 @@ struct WeightDiffBarChart: View {
                                              context: .weight,
                                              isNav: false)
     ChartContainer(config: config) {
-      if chartData.isEmpty {
-        ChartEmptyView(systemImageName: "chart.bar", title: "No Data", description: "There is no weight data from the Health App")
-      } else {
         Chart{
           if let selectedData{
            
@@ -65,7 +62,11 @@ struct WeightDiffBarChart: View {
             AxisValueLabel()
           }
         }
-      }
+        .overlay {
+          if chartData.isEmpty {
+            ChartEmptyView(systemImageName: "chart.bar", title: "No Data", description: "There is no weight data from the Health App")
+          }
+        }
     }
     .sensoryFeedback(.selection, trigger: rawSelectedDate)
     .onChange(of: rawSelectedDate) { oldValue, newValue in
