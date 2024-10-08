@@ -18,7 +18,6 @@
 		136E67F62C61D2E000A15970 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 136E67F52C61D2E000A15970 /* Assets.xcassets */; };
 		136E67F92C61D2E000A15970 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 136E67F82C61D2E000A15970 /* Preview Assets.xcassets */; };
 		137F81142CAE7DF900DEF661 /* Array+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137F81132CAE7DF900DEF661 /* Array+Ext.swift */; };
-		139BF7BB2C828D0600B4DBF3 /* ChartMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139BF7BA2C828D0600B4DBF3 /* ChartMath.swift */; };
 		139BF7BD2C828DA000B4DBF3 /* ChartDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139BF7BC2C828DA000B4DBF3 /* ChartDataTypes.swift */; };
 		139BF7C02C828E5600B4DBF3 /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139BF7BF2C828E5600B4DBF3 /* Date+Ext.swift */; };
 		139BF7C32C8292C300B4DBF3 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 139BF7C22C8292C300B4DBF3 /* Algorithms */; };
@@ -46,7 +45,6 @@
 		136E67F52C61D2E000A15970 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		136E67F82C61D2E000A15970 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		137F81132CAE7DF900DEF661 /* Array+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ext.swift"; sourceTree = "<group>"; };
-		139BF7BA2C828D0600B4DBF3 /* ChartMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartMath.swift; sourceTree = "<group>"; };
 		139BF7BC2C828DA000B4DBF3 /* ChartDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataTypes.swift; sourceTree = "<group>"; };
 		139BF7BF2C828E5600B4DBF3 /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
 		139BF7C42C82B4AD00B4DBF3 /* StepPieChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepPieChart.swift; sourceTree = "<group>"; };
@@ -71,6 +69,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		133FD9932CB5198A00B94105 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				134B69C32C8856E500E23EAA /* WeightLineChart.swift */,
+				134B69C82C899F8E00E23EAA /* WeightDiffBarChart.swift */,
+				139BF7C42C82B4AD00B4DBF3 /* StepPieChart.swift */,
+				13E90C932C7021D5008EEE16 /* StepBarChart.swift */,
+			);
+			path = Charts;
+			sourceTree = "<group>";
+		};
+		133FD9942CB5199300B94105 /* Charts Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				13E8ED432CA24A6000E04AC6 /* ChartHelper.swift */,
+				139BF7BC2C828DA000B4DBF3 /* ChartDataTypes.swift */,
+			);
+			path = "Charts Utilities";
+			sourceTree = "<group>";
+		};
+		133FD9952CB5199E00B94105 /* Charts Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				13F3BA752C9AEB4E00AA822E /* ChartContainer.swift */,
+				13C341732C97D5C8009D0772 /* ChartEmptyView.swift */,
+				13E8ED452CA24C8900E04AC6 /* ChartAnnotationView.swift */,
+			);
+			path = "Charts Custom Views";
+			sourceTree = "<group>";
+		};
 		134B69C52C88583D00E23EAA /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -103,10 +131,10 @@
 				133262C22C645CAC00CB90E1 /* stepTracker.entitlements */,
 				136E67F12C61D2DE00A15970 /* stepTrackerApp.swift */,
 				136E67F52C61D2E000A15970 /* Assets.xcassets */,
-				13E90C982C7024A8008EEE16 /* Manager */,
+				134B69C52C88583D00E23EAA /* Utilities */,
+				13E90C982C7024A8008EEE16 /* Managers */,
 				13E90C972C7024A0008EEE16 /* Model */,
 				13E90C962C70246E008EEE16 /* Charts */,
-				134B69C52C88583D00E23EAA /* Utilities */,
 				13E90C952C70245A008EEE16 /* Screens */,
 				136E67F72C61D2E000A15970 /* Preview Content */,
 			);
@@ -143,16 +171,9 @@
 		13E90C962C70246E008EEE16 /* Charts */ = {
 			isa = PBXGroup;
 			children = (
-				13E8ED432CA24A6000E04AC6 /* ChartHelper.swift */,
-				13F3BA752C9AEB4E00AA822E /* ChartContainer.swift */,
-				134B69C32C8856E500E23EAA /* WeightLineChart.swift */,
-				139BF7BA2C828D0600B4DBF3 /* ChartMath.swift */,
-				134B69C82C899F8E00E23EAA /* WeightDiffBarChart.swift */,
-				139BF7BC2C828DA000B4DBF3 /* ChartDataTypes.swift */,
-				139BF7C42C82B4AD00B4DBF3 /* StepPieChart.swift */,
-				13E90C932C7021D5008EEE16 /* StepBarChart.swift */,
-				13C341732C97D5C8009D0772 /* ChartEmptyView.swift */,
-				13E8ED452CA24C8900E04AC6 /* ChartAnnotationView.swift */,
+				133FD9932CB5198A00B94105 /* Charts */,
+				133FD9952CB5199E00B94105 /* Charts Custom Views */,
+				133FD9942CB5199300B94105 /* Charts Utilities */,
 			);
 			path = Charts;
 			sourceTree = "<group>";
@@ -165,12 +186,12 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		13E90C982C7024A8008EEE16 /* Manager */ = {
+		13E90C982C7024A8008EEE16 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				133262C32C64684300CB90E1 /* HealthKitManager.swift */,
 			);
-			path = Manager;
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,7 +283,6 @@
 				133262C42C64684300CB90E1 /* HealthKitManager.swift in Sources */,
 				133262C12C6457F900CB90E1 /* HealthKitPermissionPrimingView.swift in Sources */,
 				13E8ED442CA24A6900E04AC6 /* ChartHelper.swift in Sources */,
-				139BF7BB2C828D0600B4DBF3 /* ChartMath.swift in Sources */,
 				13D1ED3A2C6D8AED0082B269 /* HealthMetric.swift in Sources */,
 				139BF7BD2C828DA000B4DBF3 /* ChartDataTypes.swift in Sources */,
 				139BF7C52C82B4AD00B4DBF3 /* StepPieChart.swift in Sources */,
