@@ -24,17 +24,13 @@ struct WeightLineChart: View {
     chartData.map { $0.value }.min() ?? 0
   }
   
-  var averageWeight : Double{
+  var average : Double{
     chartData.map { $0.value }.average
   }
   
   var body: some View {
-    let config = ChartContainerConfiguration(title: "Weight",
-                                             symbol: "figure",
-                                             subtitle: "Avg: \(averageWeight.formatted(.number.precision(.fractionLength(1)))) lbs",
-                                             context: .weight,
-                                             isNav: true)
-    ChartContainer(config: config) {
+   
+    ChartContainer(chartType: .weightLine(average: average)) {
       
       Chart{
         
