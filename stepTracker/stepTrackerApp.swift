@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct stepTrackerApp: App {
+  
+  let hkManager = HealthKitManager()
+  
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DashBoardView()
+            .environment(hkManager)
         }
     }
 }
