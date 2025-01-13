@@ -16,6 +16,7 @@ struct MockData{
     }
     return array
   }
+  
   static var weights : [HealthMetric]{
     var array : [HealthMetric] = []
     for i in 0..<28 {
@@ -24,6 +25,7 @@ struct MockData{
     }
     return array
   }
+  
   static var weightDiff : [DateValueChartData]{
     var array : [DateValueChartData] = []
     for i in 0..<7 {

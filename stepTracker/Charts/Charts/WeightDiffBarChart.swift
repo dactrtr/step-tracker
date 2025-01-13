@@ -21,15 +21,7 @@ struct WeightDiffBarChart: View {
   }
   
   var body: some View {
-    let config = ChartContainerConfiguration(title: "Average Weight Change",
-                                             symbol: "figure",
-                                             subtitle: "Per Weekday (last 28 days)",
-                                             context: .weight,
-                                             isNav: false)
-    ChartContainer(config: config) {
-      if chartData.isEmpty {
-        ChartEmptyView(systemImageName: "chart.bar", title: "No Data", description: "There is no weight data from the Health App")
-      } else {
+    ChartContainer(chartType: .weightDiffBar) {
         Chart{
           if let selectedData{
            
@@ -38,11 +30,15 @@ struct WeightDiffBarChart: View {
           }
           
           ForEach(chartData) { weightDiff in
-            BarMark(
-              x: .value("Date", weightDiff.date, unit: .day),
-              y: .value("Weight", weightDiff.value)
-            )
-            .foregroundStyle(weightDiff.value >= 0 ? Color.indigo.gradient : Color.mint.gradient)
+            Plot {
+                BarMark(
+                  x: .value("Date", weightDiff.date, unit: .day),
+                  y: .value("Weight", weightDiff.value)
+                )
+                .foregroundStyle(weightDiff.value >= 0 ? Color.indigo.gradient : Color.mint.gradient)
+            }
+            .accessibilityLabel(weightDiff.date.weekdayTitle)
+            .accessibilityValue("\(weightDiff.value.formatted(.number.precision(.fractionLength(1)).sign(strategy:.always()))) pounds")
           }
         }
         .frame(height:150)
@@ -65,7 +61,11 @@ struct WeightDiffBarChart: View {
             AxisValueLabel()
           }
         }
-      }
+        .overlay {
+          if chartData.isEmpty {
+            ChartEmptyView(systemImageName: "chart.bar", title: "No Data", description: "There is no weight data from the Health App")
+          }
+        }
     }
     .sensoryFeedback(.selection, trigger: rawSelectedDate)
     .onChange(of: rawSelectedDate) { oldValue, newValue in
